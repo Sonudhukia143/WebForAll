@@ -1,12 +1,14 @@
-import prisma from "@/lib/prisma";
+import { Suspense } from 'react';
+import { ClientGreeting } from './client-greeting';
+import { HydrateClient } from '@/trpc/server';
+import { trpc } from '../trpc/server';
 
 export default async function Home() {
-  const users = await prisma.user.findMany();
-  console.log(users);
-
+  void trpc.hello.prefetch({text: 'ClientGreeting'});
+  
   return (
-      <div>
-        NEXT APP
-      </div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ClientGreeting />
+        </Suspense>
   );
 }
