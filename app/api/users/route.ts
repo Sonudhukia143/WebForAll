@@ -8,10 +8,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   // Send your event payload to Inngest
   await inngest.send({
-    name: "test/hello.world",
-    data: {
-      email: "testUser@example.com",
-    },
+    name: "app/ticket.created",
   });
 
   return NextResponse.json({ message: "Event sent!" });
