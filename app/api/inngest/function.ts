@@ -1,4 +1,5 @@
 import { inngest } from "../../../inngest/client";
+import { Sandbox } from "@e2b/code-interpreter"
 
 // export const helloWorld = inngest.createFunction(
 //   { id: "hello-world" },
@@ -11,10 +12,16 @@ import { inngest } from "../../../inngest/client";
 
 
 import { gemini, createAgent } from "@inngest/agent-kit";
+import { getSandbox } from "./utils";
 export const summarizeContents = inngest.createFunction(
     { id: "summarize-contents" },
     { event: "app/ticket.created" },
     async ({ event, step }) => {
+        const sandboxId = await step.run("get-sandbox-id", async () => {
+            const sandbox = await Sandbox.create("devforall-test-2");
+            return sandbox.sandboxId;
+        })
+
         console.log("Event data:", event.data);
         console.log("Event name:", event.name);
         console.log(step);
@@ -31,6 +38,12 @@ export const summarizeContents = inngest.createFunction(
             }),
         });
 
+        const sandboxUrl = await step.run("get-sandbox-url", async () => {
+            const sandbox = await getSandbox(sandboxId);
+            const host =  sandbox.getHost(3000); // Assuming the sandbox template is running on port 3000
+            return `https://${host}`;
+        }); 
+
         // Run the agent with an input.  This automatically uses steps
         // to call your AI model.
         const { output } = await writer.run("Write a tweet on how AI works");
@@ -39,6 +52,7 @@ export const summarizeContents = inngest.createFunction(
         return {
             output,
             message: `AI response: ${output}`,
+            sandboxUrl,
         }
     }
 );
