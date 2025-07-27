@@ -2,16 +2,20 @@
   "name": "devforall",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "inngest": "npx inngest-cli@latest dev",
+    "docker": "e2b template build e2b.toml"
   },
   "prisma": {
     "seed": "tsx prisma/seeds.ts"
   },
   "dependencies": {
+    "@e2b/code-interpreter": "^1.5.1",
     "@inngest/agent-kit": "^0.9.0",
     "@prisma/client": "^6.12.0",
     "@prisma/extension-accelerate": "^2.0.2",
@@ -21,12 +25,15 @@
     "@trpc/next": "^11.4.3",
     "@trpc/react-query": "^11.4.3",
     "@trpc/server": "^11.4.3",
+    "add": "^2.0.6",
     "client-only": "^0.0.1",
+    "init": "^0.1.2",
     "inngest": "^3.40.1",
     "next": "15.4.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "server-only": "^0.0.1",
+    "shadcn": "^2.9.3",
     "superjson": "^2.2.2",
     "zod": "^4.0.5"
   },
