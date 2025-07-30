@@ -1,15 +1,33 @@
-import { NextResponse } from "next/server";
-import { inngest } from "../../../inngest/client"; // Import our client
+import { NextRequest, NextResponse } from "next/server";
+import { inngest } from "../../../inngest/client";
 
-// Opt out of caching; every request should send a new event
 export const dynamic = "force-dynamic";
 
-// Create a simple async Next.js API route handler
-export async function GET() {
-  // Send your event payload to Inngest
-  await inngest.send({
-    name: "app/ticket.created",
-  });
+export async function POST(request: NextRequest) {
+  try {
+    console.log("CALLING TRPC FUNCTIONS");
 
-  return NextResponse.json({ message: "Event sent!" });
+    // Step 1: Parse the request body
+    const body = await request.json();
+    const { value } = body;
+
+    if (!value) {
+      return NextResponse.json({ error: "Missing value" }, { status: 400 });
+    }
+
+    console.log(value);
+
+    // Step 2: Send the event to Inngest
+    await inngest.send({
+      name: "app/ticket.created",
+      data: {
+        value,
+      },
+    });
+
+    return NextResponse.json({ message: "Event sent!" });
+  } catch (error) {
+    console.error("Error in POST /api/users", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
 }

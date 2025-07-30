@@ -35,7 +35,7 @@
     "server-only": "^0.0.1",
     "shadcn": "^2.9.3",
     "superjson": "^2.2.2",
-    "zod": "^4.0.5"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
